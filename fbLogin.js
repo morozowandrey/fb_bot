@@ -4,8 +4,6 @@ var page = webPage.create();
 var fs = require('fs');
 var CookieJar = "cookiejar.json";
 var pageResponses = {};
-// res = page.injectJs('jquery-3.2.1.min.js');
-// console.log(res);
 
 page.settings.userAgent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.98 Safari/537.36';
 page.settings.javascriptEnabled = true;
@@ -22,10 +20,9 @@ if(fs.isFile(CookieJar))
         phantom.addCookie(x);
     });
 
-
 ///////////////////////////////////////////////////////////////////////////////////////////////
 var login = function (callback) {
-    page.open("http://facebook.com", function(status) {
+    page.open("https://m.facebook.com/", function(status) {
         if ( status === "success" ) {
             page.evaluate(function() {
                 document.querySelector("input[name='email']").value = "andrey940@gmail.com";
@@ -43,12 +40,12 @@ var login = function (callback) {
 };
 
 var targetPage = function (callback) {
-    page.open("https://www.facebook.com/Lalala2-1908199049468067/notifications/?section=activity_feed&subsection=checkin", function (status) {
+    page.open("https://m.facebook.com/story.php?story_fbid=103003277024225&id=100019436589542&fs=0", function (status) {
         if ( status === "success" ) {
             window.setTimeout(function () {
-                console.log("notifications page achieved");
-                page.render('notifications_page.jpg');
-                //callback(parser);
+                console.log("checkins page achieved");
+                page.render('checkins_page.jpg');
+                phantom.exit();
                 parser(page);
             }, 5000);
         }
@@ -56,20 +53,25 @@ var targetPage = function (callback) {
 };
 
 var parser = function (page){
-    console.log(page);
     var test= page.evaluate(function() {
-        var els=[];
-        var postInputs = document.querySelectorAll('[name="ft_ent_identifier"]');
 
-        postInputs.forEach(function(el,i){
-            els[i]=el.value;
-        });
-        console.log(els);
+        function comment(el) {
+            el = document.querySelector(el);
+            el.value='comment';
+
+            MAjaxify.form(new MouseEvent('click', {
+                'view': window,
+                'bubbles': true,
+                'cancelable': true
+            }),document.querySelector('form'),"async_composer","cache",null,false);
+        }
+        comment('[name="comment_text"]');
+
     });
     window.setTimeout(function () {
         console.log(test);
         console.log("all done");
-        page.render('notification.jpg');
+        page.render('comment done.jpg');
         phantom.exit();
     }, 5000);
 };
