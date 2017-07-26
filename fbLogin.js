@@ -43,60 +43,59 @@ var login = function (callback) {
 };
 
 var targetPage = function (callback) {
-    page.open("https://m.facebook.com/story.php?story_fbid=103003277024225&id=100019436589542", function (status) {
-        if ( status === "success" ) {
-            var links = page.evaluate(function() {
-                // creating links array
-                var linksArr= [];
-                document.querySelectorAll('.story_body_container div[data-sigil="m-feed-voice-subtitle"] > a:first-child').forEach(function (el, i) {
-                    linksArr[i]=el.getAttribute('href');
+    // page.open("https://m.facebook.com/story.php?story_fbid=103003277024225&id=100019436589542", function (status) {
+    //     if ( status === "success" ) {
+    //
+    //         var links = page.evaluate(function() {
+    //             var nodeList = document.querySelectorAll('.story_body_container div[data-sigil="m-feed-voice-subtitle"] > a:first-child');
+    //             var linksArr = Array.prototype.map.call(nodeList, function(el) {
+    //                 return  el.getAttribute('href')
+    //             });
+    //         });
+    //
+    //         page.open("https://m.facebook.com/story.php?story_fbid=103003277024225&id=100019436589542&fs=0", function (status) {
+    //             if ( status === "success" ) {
+    //                 // if (document.querySelector('input[name="comment_text"]').value !='comment text'){
+    //                 var el = document.querySelector('input[name="comment_text"]');
+    //                 el.value='comment text';
+    //                 MAjaxify.form(event,document.querySelector('form'),"async_composer","cache",null,false);
+    //                 // }
+    //             }
+    //         });
+    //
+    //         window.setTimeout(function () {
+    //
+    //             // for (var i = 0; i <  linksArr.length; i++){
+    //             // page.open("https://m.facebook.com/story.php?story_fbid=103003277024225&id=100019436589542&fs=0", function (status) {
+    //             //     if ( status === "success" ) {
+    //             //         // if (document.querySelector('input[name="comment_text"]').value !='comment text'){
+    //             //         var el = document.querySelector('input[name="comment_text"]');
+    //             //         el.value='comment text';
+    //             //         MAjaxify.form(event,document.querySelector('form'),"async_composer","cache",null,false);
+    //             //         // }
+    //             //     }
+    //             // });
+    //             // }
+    //
+    //             console.log("comments done");
+    //             page.render('comment.jpg');
+    //             phantom.exit();
+    //         }, 1000);
+    //     }
+    // });
+    page.open("https://m.facebook.com/story.php?story_fbid=103003277024225&id=100019436589542&fs=0", function (status) {
+        if (status === "success") {
+            window.setTimeout(function () {
+                page.evaluate(function () {
+                    var el = document.querySelector('input[name="comment_text"]');
+                    el.value = 'comment text';
+                    MAjaxify.form(event, document.querySelector('form'), "async_composer", "cache", null, false);
                 });
-                // to do:
-                // *promise
-                // *for each проверка интераций (счетчик)
-                // *setTimeout
-            });
-            window.setTimeout(function () {
-                return linksArr;
-            }, 1000);
-
-
-            // parse links from lincksArr, open pages with this links and post comment in it with terminal
-            window.setTimeout(function () {
-                for (var i = 0; i <  links.length; i++){
-                    page.open(links[i], function (status) {
-                        if ( status === "success" ) {
-                            if (document.querySelector('input[name="comment_text"]').value !='comment text'){
-                                var el = document.querySelector(el);
-                                el.value='comment text';
-                                MAjaxify.form(event,document.querySelector('form'),"async_composer","cache",null,false);
-                            }
-                        }
-                    });
-                }
-
-                console.log("comments done");
-                page.render('comment.jpg');
+                console.log('true');
                 phantom.exit();
             }, 3000);
         }
     });
 };
-
-function comment(el) {
-    var el = document.querySelector(el);
-        el.value='comment';
-    MAjaxify.form(event,document.querySelector('form'),"async_composer","cache",null,false);
-}
-
-function simulateClick (el) {
-    var click = new MouseEvent('click', {
-        'view': window,
-        'bubbles': true,
-        'cancelable': true
-    });
-    var clickTarget = document.querySelector(el);
-    var cancelled = !clickTarget.detachEvent(event);
-}
 
 login(targetPage);
