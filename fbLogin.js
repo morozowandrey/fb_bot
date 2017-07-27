@@ -43,6 +43,20 @@ var login = function (callback) {
 };
 
 var targetPage = function (callback) {
+    // page.open("https://m.facebook.com/story.php?story_fbid=103003277024225&id=100019436589542&fs=0", function (status) {
+    //     if (status === "success") {
+    //         window.setTimeout(function () {
+    //             page.evaluate(function () {
+    //                 var el = document.querySelector('input[name="comment_text"]');
+    //                 el.value = 'comment text';
+    //                 MAjaxify.form(event, document.querySelector('form'), "async_composer", "cache", null, false);
+    //             });
+    //             console.log('after comment');
+    //             phantom.exit();
+    //         }, 3000);
+    //     }
+    // });
+
     // page.open("https://m.facebook.com/story.php?story_fbid=103003277024225&id=100019436589542", function (status) {
     //     if ( status === "success" ) {
     //
@@ -85,15 +99,18 @@ var targetPage = function (callback) {
     // });
     page.open("https://m.facebook.com/story.php?story_fbid=103003277024225&id=100019436589542&fs=0", function (status) {
         if (status === "success") {
-            window.setTimeout(function () {
-                page.evaluate(function () {
+            page.evaluate(function() {
+                window.setTimeout(function () {
                     var el = document.querySelector('input[name="comment_text"]');
                     el.value = 'comment text';
                     MAjaxify.form(event, document.querySelector('form'), "async_composer", "cache", null, false);
-                });
+                }, 3000);
+            });
+            setTimeout(function () {
                 console.log('true');
                 phantom.exit();
-            }, 3000);
+            }, 4000)
+
         }
     });
 };
